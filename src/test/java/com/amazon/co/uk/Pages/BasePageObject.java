@@ -81,6 +81,7 @@ public class BasePageObject {
         timeOutInSeconds = timeOutInSeconds != null ? timeOutInSeconds : 30;
         WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
         wait.until(condition);
+
     }
 
     /*** Method to wait for visibility ***/

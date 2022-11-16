@@ -8,19 +8,24 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TryingPurchase_Quantity extends TestUtilities {
+import java.util.concurrent.TimeUnit;
 
-    private By SearchBar = By.id("twotabsearchtextbox");
-    private By SearchButton = By.id("nav-search-submit-button");
-    private By ItemSearched = By.xpath("//span[contains(text(),'Echo Dot (4th generation)')]");
+public class ArticleFromMainScreen extends TestUtilities {
+    protected By cookiesAlert = By.id("sp-cc-accept");
+    int i;
+    boolean exists;
+    protected By right_Arrow = By.xpath("//*[@id='gw-desktop-herotator']/div/div/div/div[3]/a/i");
+    protected By AlexaEcho = By.xpath("//a[contains(@aria-label, 'Echo Family')]");
+    protected By echo = By.xpath("//*[@id='acs-product-block-1']/a/span/span[2]");
+
     private By AddToBasket = By.id("add-to-cart-button");
     private By ProceedToCheckout = By.id("sc-buy-box-ptc-button");
     private By quantity = By.id("quantity");
     private By AmazonDevices = By.xpath("//*[@id='searchDropdownBox']");
-    protected By cookiesAlert = By.id("sp-cc-accept");
+
     protected By noThanks = By.id("a-autoid-3");
     @Test
-    public void purchaseTest() throws InterruptedException {
+    public void purchaseArticleTest() throws InterruptedException {
         /*** Open The main page ***/
 
         WelcomePageObject welcomePage = new WelcomePageObject(driver, log);
@@ -30,21 +35,34 @@ public class TryingPurchase_Quantity extends TestUtilities {
         AlertPageObject alert = new AlertPageObject(driver, log);
         alert.acceptCookie(cookiesAlert);
 
-        sleep(2000);
-
-        welcomePage.selectOption(2, AmazonDevices);
-        sleep(2000);
-
-        welcomePage.click(SearchButton);
         sleep(1000);
-        welcomePage.scrollToY_cord("50");
 
-        sleep(2000);
+        for(i=0;i<4;i++){
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
 
-        welcomePage.click(ItemSearched);
 
-        sleep(2000);
+            exists = driver.findElements(AlexaEcho).size() != 0;
 
+            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+
+            sleep(1000);
+
+            if(exists == true){
+                break;
+            }
+            welcomePage.click(right_Arrow);
+
+
+        }
+
+        welcomePage.click(AlexaEcho);
+        sleep(1000);
+
+        welcomePage.scrollToY_cord("200");
+
+        sleep(1000);
+
+        welcomePage.click(echo);
         welcomePage.scrollToY_cord("100");
         sleep(1000);
         welcomePage.selectOption(2, quantity);
@@ -75,7 +93,6 @@ public class TryingPurchase_Quantity extends TestUtilities {
         Assert.assertEquals(expected, actualNoSuccessMessage, "Error");
 
 
-
-
     }
+
 }
